@@ -1,15 +1,17 @@
-// function start() {
-//   console.log("comecou");
-// }
-//start();
-
-// OR
-
+// Interromper loop infinito: CTRL + C
 const start = () => {
-  let count = 0;
-  while (count < 10) {
-    console.log(count);
-    count++;
+  while (true) {
+    let opcao = "cadastrar";
+    switch (opcao) {
+      case "cadastra":
+        console.log("vamos cadastrar");
+        break;
+      case "listar":
+        console.log("vamos listar");
+        break;
+      case "sair":
+        return;
+    }
   }
 };
 
