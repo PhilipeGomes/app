@@ -3,5 +3,6 @@
   - Metas realizadas
   - Metas abertas
 - Marcar/Desmarcar metas realizadas
-- Remover metas
+- Remover metta bas
 - Sistema de mensagens
+obrigad 
