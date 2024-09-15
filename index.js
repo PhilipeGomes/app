@@ -52,6 +52,27 @@ const listarMetas = async () => {
   });
 };
 
+const metasRealizadas = async () => {
+  //Filter mais uma função de array
+  const realizadas = metas.filter((meta) => {
+    // return true -> Sempre que o return for verdadeiro ele pega o item da
+    // lista e coloca na nova lista, neste caso, meta, item da lista metas, se verdadeiro, será
+    // inserido dentro de realizadas
+    return meta.checked;
+  });
+
+  if (realizadas.length == 0) {
+    console.log("Não existem metas realizadas! :(");
+    return;
+  }
+  //A func abaixo basicamente formata a saida para uma lista de metas
+  //possiveis serem selecionas... como as opções da tela de seleção inicial
+  await select({
+    message: "Metas Realizadas",
+    choices: [...realizadas],
+  });
+};
+
 // Interromper loop infinito: CTRL + C
 const start = async () => {
   while (true) {
@@ -75,6 +96,10 @@ const start = async () => {
           value: "listar",
         },
         {
+          name: "Listar realizadas",
+          value: "realizadas",
+        },
+        {
           name: "Sair",
           value: "sair",
         },
@@ -88,6 +113,9 @@ const start = async () => {
         break;
       case "listar":
         await listarMetas();
+        break;
+      case "realizadas":
+        await metasRealizadas();
         break;
       case "sair":
         console.log("Até a próxima!");

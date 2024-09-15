@@ -90,3 +90,7 @@
 
 // console.log(metas[0].value);
 // console.log(metas[1].value);
+
+Métodos de array: Push, [find, forEach, filter] : HOF (Higher Order Functions)
+
+spread and rest operator
