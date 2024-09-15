@@ -1,4 +1,4 @@
-const { select, input } = require("@inquirer/prompts"); // abrir uma caixinha de seleção
+const { select, input, checkbox } = require("@inquirer/prompts"); // abrir uma caixinha de seleção
 
 let meta = {
   value: "Tomar 3L de água por dia",
@@ -21,6 +21,35 @@ const cadastrarMeta = async () => {
   metas.push(
     { value: meta, checked: false } //como ainda não terminei a meta, so estou cadastrando, crio como false
   );
+};
+
+const listarMetas = async () => {
+  const respostas = await checkbox({
+    message:
+      "Use as setas para mudar de meta, o espaço para marcar ou desmarcar e o Enter para finalizar essa etapa",
+    choices: [...metas], //spread operator ta pegando tudo que existe em metas e colocando em choices
+    instructions: false,
+  });
+  //Insere em resposta a meta selecionada
+
+  if (respostas.length == 0) {
+    console.log("Nenhuma meta selecionada");
+    return;
+  }
+
+  //deflaga todas as metas
+  //Isso é necessário porque se em algum momento o user flagar todas as metas, não teremos nenhum momento para desflgar
+  //então desflagamos todas e voltamos a flagar apenas as que persistirem em respostas após o Listar do user.
+  metas.forEach((m) => {
+    m.checked = false;
+  });
+
+  respostas.forEach((resposta) => {
+    const meta = metas.find((m) => {
+      return m.value == resposta;
+    });
+    meta.checked = true; // marca com true a meta que foi encontrada dentro de respostas
+  });
 };
 
 // Interromper loop infinito: CTRL + C
@@ -58,7 +87,7 @@ const start = async () => {
         console.log(metas); // se coloca assim sai formatado como array
         break;
       case "listar":
-        console.log("vamos listar");
+        await listarMetas();
         break;
       case "sair":
         console.log("Até a próxima!");
