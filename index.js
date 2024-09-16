@@ -67,7 +67,7 @@ const metasRealizadas = async () => {
   //A func abaixo basicamente formata a saida para uma lista de metas
   //possiveis serem selecionas... como as opções da tela de seleção inicial
   await select({
-    message: "Metas Realizadas" + realizadas.length,
+    message: "Metas Realizadas:" + realizadas.length,
     choices: [...realizadas],
   });
 };
@@ -83,9 +83,34 @@ const metasAbertas = async () => {
   }
 
   await select({
-    message: "Metas Abertas" + abertas.length,
+    message: "Metas Abertas:" + abertas.length,
     choices: [...abertas],
   });
+};
+
+const deletarMetas = async () => {
+  //map devolve o mesmo array só que modificado
+  const metasDesmarcadas = metas.map((meta) => {
+    return { value: meta.value, checked: false };
+  }); //basicamente to copiando todo mundo para metasDesmarcadas alterando o valor de todos os itens para false no checked
+
+  const itemADeletar = await checkbox({
+    message: "Selecione item para deletar",
+    choices: [...metasDesmarcadas], //spread operator ta pegando tudo que existe em metas e colocando em choices
+    instructions: false,
+  }); //Insere em resposta a meta selecionada
+
+  if (itemADeletar.length == 0) {
+    console.log("Nenhum item para deletar");
+    return;
+  }
+
+  itemADeletar.forEach((item) => {
+    metas = metas.filter((meta) => {
+      return meta.value != item;
+    });
+  });
+  console.log("Metas(s) deltas(s) com sucesso!");
 };
 
 // Interromper loop infinito: CTRL + C
@@ -119,6 +144,10 @@ const start = async () => {
           value: "abertas",
         },
         {
+          name: "Deletar metas",
+          value: "deletar",
+        },
+        {
           name: "Sair",
           value: "sair",
         },
@@ -138,6 +167,9 @@ const start = async () => {
         break;
       case "abertas":
         await metasAbertas();
+        break;
+      case "abertas":
+        await deletarMetas();
         break;
       case "sair":
         console.log("Até a próxima!");
