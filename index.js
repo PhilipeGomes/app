@@ -29,13 +29,7 @@ const listarMetas = async () => {
       "Use as setas para mudar de meta, o espaço para marcar ou desmarcar e o Enter para finalizar essa etapa",
     choices: [...metas], //spread operator ta pegando tudo que existe em metas e colocando em choices
     instructions: false,
-  });
-  //Insere em resposta a meta selecionada
-
-  if (respostas.length == 0) {
-    console.log("Nenhuma meta selecionada");
-    return;
-  }
+  }); //Insere em resposta a meta selecionada
 
   //deflaga todas as metas
   //Isso é necessário porque se em algum momento o user flagar todas as metas, não teremos nenhum momento para desflgar
@@ -43,6 +37,11 @@ const listarMetas = async () => {
   metas.forEach((m) => {
     m.checked = false;
   });
+
+  if (respostas.length == 0) {
+    console.log("Nenhuma meta selecionada");
+    return;
+  }
 
   respostas.forEach((resposta) => {
     const meta = metas.find((m) => {
