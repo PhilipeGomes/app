@@ -1,14 +1,29 @@
 const { select, input, checkbox } = require("@inquirer/prompts"); // abrir uma caixinha de seleção
+const fs = require("fs").promises;
 
 let mensagem = "Bem vindo ao App de Metas";
 
-let meta = {
-  value: "Tomar 3L de água por dia",
-  checked: false,
-};
+// let meta = {
+//   value: "Tomar 3L de água por dia",
+//   checked: false,
+// };
 
 // let metas = []; Posso declarar a list assim, sem nada entrer os colchetes
-let metas = [meta];
+// let metas = [meta];
+let metas;
+
+const carregarMetas = async () => {
+  try {
+    const dados = await fs.readFile("metas.json", "utf-8");
+    metas = JSON.parse(dados);
+  } catch (erro) {
+    metas = [];
+  }
+};
+
+const salvarMetas = async () => {
+  await fs.writeFile("metas.json", JSON.stringify(metas, null, 2));
+};
 
 const cadastrarMeta = async () => {
   const meta = await input({ message: "Digite a meta:" });
@@ -28,6 +43,11 @@ const cadastrarMeta = async () => {
 };
 
 const listarMetas = async () => {
+  if (metas.length == 0) {
+    mensagem = "Não existem metas";
+    return;
+  }
+
   const respostas = await checkbox({
     message:
       "Use as setas para mudar de meta, o espaço para marcar ou desmarcar e o Enter para finalizar essa etapa",
@@ -58,6 +78,11 @@ const listarMetas = async () => {
 };
 
 const metasRealizadas = async () => {
+  if (metas.length == 0) {
+    mensagem = "Não existem metas";
+    return;
+  }
+
   //Filter mais uma função de array
   const realizadas = metas.filter((meta) => {
     // return true -> Sempre que o return for verdadeiro ele pega o item da
@@ -79,6 +104,11 @@ const metasRealizadas = async () => {
 };
 
 const metasAbertas = async () => {
+  if (metas.length == 0) {
+    mensagem = "Não existem metas";
+    return;
+  }
+
   const abertas = metas.filter((meta) => {
     return !meta.checked;
   });
@@ -95,6 +125,11 @@ const metasAbertas = async () => {
 };
 
 const deletarMetas = async () => {
+  if (metas.length == 0) {
+    mensagem = "Não existem metas";
+    return;
+  }
+
   //map devolve o mesmo array só que modificado
   const metasDesmarcadas = metas.map((meta) => {
     return { value: meta.value, checked: false };
@@ -130,8 +165,10 @@ const mostrarMensagem = () => {
 
 // Interromper loop infinito: CTRL + C
 const start = async () => {
+  await carregarMetas();
   while (true) {
     mostrarMensagem();
+    await salvarMetas();
     //sempre que eu executar o comando await
     //devo colocar a palavra ASYNC na arrow fuction
     //o comando await é utilizado para fazer o programa esperar que o user digite
